@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.propensi.genius.rest.restdto.request.AddInstansiRequestDTO;
 import com.propensi.genius.rest.restdto.response.BaseResponseDTO;
 import com.propensi.genius.rest.restdto.response.InstansiResponseDTO;
+import com.propensi.genius.rest.restdto.request.UpdateInstansiRequestDTO;
 import com.propensi.genius.rest.restservice.InstansiRestService;
 
 import java.util.List;
@@ -13,10 +14,14 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -66,6 +71,27 @@ public class InstansiRestController {
         }
     
     }
-    
-    
+
+    @PutMapping("/update")
+    public ResponseEntity<BaseResponseDTO<InstansiResponseDTO>> updateInstansi(@RequestBody UpdateInstansiRequestDTO requestDTO){
+        InstansiResponseDTO updatedInstansi = instansiRestService.updateInstansi(requestDTO);
+
+        if(updatedInstansi == null){
+            var response = new BaseResponseDTO<InstansiResponseDTO>();
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setMessage("Instansi dengan id " + requestDTO.getIdInstansi() + " tidak ditemukan");
+            response.setData(null);
+            response.setTimestamp(new Date());
+
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
+        var response = new BaseResponseDTO<InstansiResponseDTO>();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("Sukses mengupdate instansi dengan id " + requestDTO.getIdInstansi());
+        response.setData(updatedInstansi);
+        response.setTimestamp(new Date());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

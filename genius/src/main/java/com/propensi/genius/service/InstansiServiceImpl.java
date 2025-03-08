@@ -25,4 +25,14 @@ public class InstansiServiceImpl implements InstansiService{
     public Instansi addInstansi(Instansi instansi){
         return instansiDb.save(instansi);
     }
+
+    @Override
+    public Instansi getInstansiById(String idInstansi){
+        return instansiDb.findById(idInstansi).get();
+    }
+
+    @Override
+    public Instansi updateInstansi(Instansi instansi){
+        return instansiDb.save(instansi);
+    }
 }
