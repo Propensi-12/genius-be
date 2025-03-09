@@ -6,6 +6,7 @@ import com.propensi.genius.model.EndUser;
 import com.propensi.genius.repository.EndUserDb;
 import com.propensi.genius.rest.restdto.request.CreateUserRequestDTO;
 import com.propensi.genius.rest.restdto.request.LoginJwtRequestDTO;
+import com.propensi.genius.rest.restdto.response.UserResponseDTO;
 
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,15 +65,26 @@ public class AuthRestController {
             // Generate JWT Token
             String token = jwtUtils.generateJwtToken(authentication.getName(), role, id);
 
+            // Buat User DTO dari entity `EndUser`
+            UserResponseDTO userResponse = new UserResponseDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getRole(),
+                user.getDisplayName(),
+                user.getName(),
+                user.getNomorHp(),
+                user.getAlamat(),
+                user.isFirstLogin()
+            );
             // Create success response
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.OK.value());
             response.put("message", "Login berhasil!");
             response.put("timestamp", new Date());
 
-            Map<String, String> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
             data.put("token", token);
-            data.put("role", authentication.getAuthorities().iterator().next().getAuthority());
+            data.put("user", userResponse);
             response.put("data", data);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
