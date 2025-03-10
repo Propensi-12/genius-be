@@ -32,6 +32,28 @@ public class AcaraCSRRestController {
         response.setTimestamp(new Date());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/{idAcaraCsr}/detail")
+        public ResponseEntity<?> getDetailAcaraCsr(@PathVariable String idAcaraCsr) {
+        var baseResponseDTO = new BaseResponseDTO<AcaraCSRResponseDTO>();
+
+        AcaraCSRResponseDTO acaraCsr = acaraCSRRestService.getAcaraCSRById(idAcaraCsr);
+
+        if (acaraCsr == null) {
+            baseResponseDTO.setStatus(HttpStatus.NOT_FOUND.value());
+            baseResponseDTO.setMessage(String.format("Data Acara CSR tidak ditemukan"));
+            baseResponseDTO.setTimestamp(new Date());
+            return new ResponseEntity<>(baseResponseDTO, HttpStatus.NOT_FOUND);
+        }
+
+        baseResponseDTO.setStatus(HttpStatus.OK.value());
+        baseResponseDTO.setData(acaraCsr);
+        baseResponseDTO.setMessage(String.format("Acara CSR dengan ID %s berhasil ditemukan", acaraCsr.getIdAcaraCsr()));
+        baseResponseDTO.setTimestamp(new Date());
+
+        return new ResponseEntity<>(baseResponseDTO, HttpStatus.OK);
+
+    }
     
     // Endpoint untuk menambahkan AcaraCSR baru
     @PostMapping("/add")

@@ -28,7 +28,7 @@ public class InstansiServiceImpl implements InstansiService{
 
     @Override
     public Instansi getInstansiById(String idInstansi){
-        return instansiDb.findById(idInstansi).get();
+        return instansiDb.findById(idInstansi).orElse(null);
     }
 
     @Override
