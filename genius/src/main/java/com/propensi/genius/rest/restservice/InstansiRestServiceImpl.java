@@ -1,6 +1,7 @@
 package com.propensi.genius.rest.restservice;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,8 @@ import com.propensi.genius.rest.restdto.request.AddInstansiRequestDTO;
 import com.propensi.genius.rest.restdto.response.InstansiResponseDTO;
 import com.propensi.genius.rest.restdto.request.UpdateInstansiRequestDTO;
 import com.propensi.genius.service.InstansiService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class InstansiRestServiceImpl implements InstansiRestService{
@@ -97,4 +100,12 @@ public class InstansiRestServiceImpl implements InstansiRestService{
 
         return instansiResponseDTO;
     }
+
+    @Override
+    public void deleteInstansi(String idInstansi) throws EntityNotFoundException {
+        Instansi instansi = instansiDb.findById(idInstansi).orElseThrow(() -> new EntityNotFoundException("Instansi dengan ID " + idInstansi + " tidak ditemukan"));
+        instansi.setDeletedAt(new Date());
+        instansiDb.save(instansi);
+    }
+
 }

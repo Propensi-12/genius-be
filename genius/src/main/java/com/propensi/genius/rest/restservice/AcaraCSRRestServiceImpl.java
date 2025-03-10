@@ -44,7 +44,7 @@ public class AcaraCSRRestServiceImpl implements AcaraCSRRestService {
         // Ambil objek Instansi berdasarkan idInstansi dari DTO
         Instansi instansi = instansiDb.findById(requestDTO.getIdInstansi()).orElse(null);
         if(instansi == null) {
-            throw new RuntimeException("Instansi dengan id " + requestDTO.getIdInstansi() + " tidak ditemukan");
+            throw new RuntimeException("Instansi dengan ID " + requestDTO.getIdInstansi() + " tidak ditemukan");
         }
         
         AcaraCSR acara = new AcaraCSR();
