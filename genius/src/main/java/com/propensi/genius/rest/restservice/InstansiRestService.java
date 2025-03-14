@@ -11,7 +11,6 @@ import com.propensi.genius.rest.restdto.request.UpdateInstansiRequestDTO;
 
 public interface InstansiRestService {
     List<InstansiResponseDTO> getAllInstansi();
-
     InstansiResponseDTO addInstansi(AddInstansiRequestDTO requestDTO);
     InstansiResponseDTO getInstansiById(String idInstansi);
     InstansiResponseDTO updateInstansi(UpdateInstansiRequestDTO requestDTO);

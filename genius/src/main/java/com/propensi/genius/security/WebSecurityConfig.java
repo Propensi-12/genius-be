@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/profile/**").permitAll()
                 .requestMatchers("/api/instansi/**").hasAuthority("CSR")
                 .requestMatchers("/api/acaracsr/**").permitAll() 
+                .requestMatchers("/api/acarabd/**").permitAll() 
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
