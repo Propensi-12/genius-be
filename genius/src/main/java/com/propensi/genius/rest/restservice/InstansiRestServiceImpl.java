@@ -1,6 +1,7 @@
 package com.propensi.genius.rest.restservice;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,10 @@ import com.propensi.genius.model.Instansi;
 import com.propensi.genius.repository.InstansiDb;
 import com.propensi.genius.rest.restdto.request.AddInstansiRequestDTO;
 import com.propensi.genius.rest.restdto.response.InstansiResponseDTO;
+import com.propensi.genius.rest.restdto.request.UpdateInstansiRequestDTO;
 import com.propensi.genius.service.InstansiService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class InstansiRestServiceImpl implements InstansiRestService{
@@ -55,7 +59,35 @@ public class InstansiRestServiceImpl implements InstansiRestService{
 
     }
 
+    @Override
+    public InstansiResponseDTO getInstansiById(String idInstansi){
+        var instansi = instansiService.getInstansiById(idInstansi);
 
+        if(instansi == null){
+            return null;
+        }
+
+        return instansiToInstansiResponseDTO(instansi);
+    }
+
+    @Override
+    public InstansiResponseDTO updateInstansi(UpdateInstansiRequestDTO requestDTO){
+        var instansi = instansiService.getInstansiById(requestDTO.getIdInstansi());
+
+        if(instansi == null){
+            return null;
+        }
+
+        instansi.setNamaInstansi(requestDTO.getNamaInstansi());
+        instansi.setNamaNarahubung(requestDTO.getNamaNarahubung());
+        instansi.setNomorKontak(requestDTO.getNomorKontak());
+        instansi.setAlamatInstansi(requestDTO.getAlamatInstansi());
+        instansi.setJenisInstansi(requestDTO.getJenisInstansi());
+
+        instansiService.updateInstansi(instansi);
+
+        return instansiToInstansiResponseDTO(instansi);
+    }
 
     private InstansiResponseDTO instansiToInstansiResponseDTO(Instansi instansi){
         InstansiResponseDTO instansiResponseDTO = new InstansiResponseDTO();
@@ -68,4 +100,12 @@ public class InstansiRestServiceImpl implements InstansiRestService{
 
         return instansiResponseDTO;
     }
+
+    @Override
+    public void deleteInstansi(String idInstansi) throws EntityNotFoundException {
+        Instansi instansi = instansiDb.findById(idInstansi).orElseThrow(() -> new EntityNotFoundException("Instansi dengan ID " + idInstansi + " tidak ditemukan"));
+        instansi.setDeletedAt(new Date());
+        instansiDb.save(instansi);
+    }
+
 }
